@@ -31,8 +31,9 @@ public class OrderController {
 
 		OrderDTO orderDTO = new OrderDTO(order.getId(), order.getValue());
 		//Usando o convertAndSend, para conversão
-		rabbitTemplate.convertAndSend("orders.v1.order-created.generate-cashback", orderDTO);
-		rabbitTemplate.convertAndSend("orders.v1.order-created.send-notification", orderDTO);
+
+		rabbitTemplate.convertAndSend("orders.v1.order-created", "", orderDTO);
+		//Usando a forma sem o fanout -> rabbitTemplate.convertAndSend("orders.v1.order-created.send-notification", orderDTO);
 		return order;
 	}
 
