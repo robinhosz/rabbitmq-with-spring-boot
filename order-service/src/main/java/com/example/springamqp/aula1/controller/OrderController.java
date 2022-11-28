@@ -23,14 +23,16 @@ public class OrderController {
 	@PostMapping
 	public Order create(@RequestBody Order order) {
 		orders.save(order);
-		String routingKey = "orders.v1.order-created";
+		// Usando o routingKey como variavel
+		//String routingKey = "orders.v1.order-created";
 
 		//Message message = new Message(order.getId().toString().getBytes());
 		//Caso eu queria enviar o tipo message sem converter -> rabbitTemplate.send(routingKey, message);
 
 		OrderDTO orderDTO = new OrderDTO(order.getId(), order.getValue());
 		//Usando o convertAndSend, para conversão
-		rabbitTemplate.convertAndSend(routingKey, orderDTO);
+		rabbitTemplate.convertAndSend("orders.v1.order-created.generate-cashback", orderDTO);
+		rabbitTemplate.convertAndSend("orders.v1.order-created.send-notification", orderDTO);
 		return order;
 	}
 

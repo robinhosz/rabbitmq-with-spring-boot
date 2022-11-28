@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class OrderCreatedListener {
 
     //Listener que vai receber as messages
-@RabbitListener(queues = "orders.v1.order-created")
+@RabbitListener(queues = "orders.v1.order-created.send-notification")
     public void onOrderCreated(OrderDTO obj) {
     System.out.println("ID recebido " + obj.getId());
     System.out.println("Valor recebido " + obj.getValue());
