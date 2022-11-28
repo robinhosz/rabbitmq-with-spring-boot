@@ -2,6 +2,8 @@ package com.example.springamqp.aula1.controller;
 
 import com.example.springamqp.aula1.model.Order;
 import com.example.springamqp.aula1.repository.OrderRepository;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +15,16 @@ public class OrderController {
 
 	@Autowired
 	private OrderRepository orders;
+
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 	
 	@PostMapping
 	public Order create(@RequestBody Order order) {
 		orders.save(order);
+		String routingKey = "orders.v1.order-created";
+		Message message = new Message(order.getId().toString().getBytes());
+		rabbitTemplate.send(routingKey, message);
 		return order;
 	}
 
