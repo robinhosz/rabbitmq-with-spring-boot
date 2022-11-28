@@ -1,4 +1,4 @@
-package com.example.springamqp.aula1;
+package com.example.springamqp.aula1.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

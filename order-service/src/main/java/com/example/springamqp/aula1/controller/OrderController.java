@@ -1,5 +1,7 @@
-package com.example.springamqp.aula1;
+package com.example.springamqp.aula1.controller;
 
+import com.example.springamqp.aula1.model.Order;
+import com.example.springamqp.aula1.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
