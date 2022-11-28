@@ -1,5 +1,6 @@
 package com.example.springamqp.aula1.controller;
 
+import com.example.springamqp.aula1.dto.OrderDTO;
 import com.example.springamqp.aula1.model.Order;
 import com.example.springamqp.aula1.repository.OrderRepository;
 import org.springframework.amqp.core.Message;
@@ -23,8 +24,13 @@ public class OrderController {
 	public Order create(@RequestBody Order order) {
 		orders.save(order);
 		String routingKey = "orders.v1.order-created";
-		Message message = new Message(order.getId().toString().getBytes());
-		rabbitTemplate.send(routingKey, message);
+
+		//Message message = new Message(order.getId().toString().getBytes());
+		//Caso eu queria enviar o tipo message sem converter -> rabbitTemplate.send(routingKey, message);
+
+		OrderDTO orderDTO = new OrderDTO(order.getId(), order.getValue());
+		//Usando o convertAndSend, para conversão
+		rabbitTemplate.convertAndSend(routingKey, orderDTO);
 		return order;
 	}
 
