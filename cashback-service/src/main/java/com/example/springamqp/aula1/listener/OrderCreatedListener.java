@@ -5,6 +5,8 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class OrderCreatedListener {
 
@@ -13,5 +15,9 @@ public class OrderCreatedListener {
     public void onOrderCreated(OrderDTO obj) {
     System.out.println("ID recebido " + obj.getId());
     System.out.println("Valor recebido " + obj.getValue());
+
+    if(obj.getValue().compareTo(new BigDecimal("10000")) >= 0) {
+        throw new RuntimeException("Falha no processamento da venda de id: " + obj.getId());
+    }
     }
 }
