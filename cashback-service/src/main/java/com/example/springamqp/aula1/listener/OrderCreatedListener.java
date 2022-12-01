@@ -16,8 +16,6 @@ public class OrderCreatedListener {
     System.out.println("ID recebido " + obj.getId());
     System.out.println("Valor recebido " + obj.getValue());
 
-    if(obj.getValue().compareTo(new BigDecimal("10000")) >= 0) {
-        throw new RuntimeException("Falha no processamento da venda de id: " + obj.getId());
-    }
+
     }
 }

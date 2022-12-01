@@ -14,9 +14,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    //FanoutExchange
     @Bean
     public FanoutExchange fanoutExchange() {
         return new FanoutExchange("orders.v1.order-created");
+    }
+
+    //FanoutExchange para dead letters queues
+    @Bean
+    public FanoutExchange fanoutExchangeDLX() {
+        return new FanoutExchange("orders.v1.order-created.dlx");
     }
 
     @Bean

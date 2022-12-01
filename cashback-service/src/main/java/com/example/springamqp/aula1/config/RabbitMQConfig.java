@@ -13,21 +13,46 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class RabbitMQConfig {
 
+    //Queue do cashback
     @Bean
     public Queue queueCashBack() {
-        return new Queue("orders.v1.order-created.generate-cashback");
+        Map<String, Object> args = new HashMap<>();
+        args.put("x-dead-letter-exchange", "orders.v1.order-created.dlx");
+        //args.put("x-dead-letter-routing-key", "orders.v1.order-created.dlx.generate-cashback.dlq");
+        return new Queue("orders.v1.order-created.generate-cashback", true, false, false, args);
     }
 
     @Bean
     public Binding binding() {
-       Queue queue = new Queue("orders.v1.order-created.generate-cashback");
-       FanoutExchange fanoutExchange = new FanoutExchange("orders.v1.order-created");
-        return BindingBuilder.bind(queue).to(fanoutExchange);
+       Queue queue = queueCashBack();
+       FanoutExchange exchange = new FanoutExchange("orders.v1.order-created");
+        return BindingBuilder.bind(queue).to(exchange);
     }
 
+    //Dead letter queue do cashback
+    @Bean
+    public Queue queueCashBackDLQ() {
+        return new Queue("orders.v1.order-created.dlx.generate-cashback.dlq");
+    }
+
+    //Dead letter queue Parking Lot
+    @Bean
+    public Queue queueCashBackDLQParkingLot() {
+        return new Queue("orders.v1.order-created.dlx.generate-cashback.dlq.parking-lot");
+    }
+
+    @Bean
+    public Binding bindingDLQ() {
+        Queue queue = queueCashBackDLQ();
+        FanoutExchange exchange = new FanoutExchange("orders.v1.order-created.dlx");
+        return BindingBuilder.bind(queue).to(exchange);
+    }
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
