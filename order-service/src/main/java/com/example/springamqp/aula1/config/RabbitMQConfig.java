@@ -36,12 +36,13 @@ public class RabbitMQConfig {
         return event -> rabbitAdmin.initialize();
     }
 
-    //Bean para converter em json
+    //Bean para converter em json, usando o jackson!
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-    //Bean para enviar um objeto mais complexo, ex: dto e converter em json
+
+    //Bean para enviar um objeto mais complexo, ex: dto e converter em json, ele seta o messageConverter no rabbitTemplate
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter jackson2JsonMessageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
